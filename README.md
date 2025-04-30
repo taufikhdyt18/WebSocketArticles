@@ -23,10 +23,18 @@ Kolaborasi Dokumen Online: Memungkinkan pengguna menyinkronkan perubahan dokumen
 
 
 ### Implementasi sederhana
-Aplikasi chat real-time menggunakan Node.js dengan library WS sebagai server dan JavaScript pada klien. Saat klien terhubung, koneksi WebSocket terbuka. Ini memungkinkan komunikasi real-time yang lancar karena pesan dapat dikirim dan diterima secara instan tanpa melakukan permintaan HTTP berulang.
+Aplikasi chat real-time menggunakan Node.js dengan VirtualBox ubuntu VM sebagai server dan html+JavaScript pada klien. Saat klien terhubung, koneksi WebSocket terbuka. Ini memungkinkan komunikasi real-time yang lancar karena pesan dapat dikirim dan diterima secara instan tanpa melakukan permintaan HTTP berulang.
 Kesimpulan
 WebSocket menjadi teknologi penting untuk mendukung aplikasi web modern yang membutuhkan komunikasi real-time dengan latensi rendah dan efisiensi tinggi. Dengan perbedaan dasar dari HTTP tradisional, WebSocket memungkinkan pengalaman pengguna yang lebih interaktif dan responsif, terutama untuk aplikasi chat, game, notifikasi, dan feed data live. Selain itu, kemudahan implementasinya memberi pengembang banyak peluang untuk membuat produk digital yang lebih dinamis.
 
+- Server.js
+![image](ss/server.png)
+
+- Client.html
+![image](ss/client.png)
+
+- Cuplikan
+![image](ss/cuplikan_websocket.png)
 
 
 
