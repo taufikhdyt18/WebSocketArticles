@@ -37,11 +37,8 @@ WebSocket menjadi teknologi penting untuk mendukung aplikasi web modern yang mem
 ![image](ss/cuplikan_websocket.png)
 
 
-
-
-
-
-
+### Kesimpulan
+WebSocket menjadi teknologi penting untuk mendukung aplikasi web modern yang membutuhkan komunikasi real-time dengan latensi rendah dan efisiensi tinggi. Dengan perbedaan dasar dari HTTP tradisional, WebSocket memungkinkan pengalaman pengguna yang lebih interaktif dan responsif, terutama untuk aplikasi chat, game, notifikasi, dan feed data live. Selain itu, kemudahan implementasinya memberi pengembang banyak peluang untuk membuat produk digital yang lebih dinamis.
 
 
 ### References
