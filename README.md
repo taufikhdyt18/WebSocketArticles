@@ -181,14 +181,13 @@ promptServerMessage();
 
 ### Pengujian
 
-Jalankan server.js di VM Ubuntu
+#### Jalankan server.js di VM Ubuntu
 
-#### Di VirtualBox ubuntu
 ```
 node server.js
 ```
 
-#### Bisa di jalankan di terminal VScode atau os yg lain
+#### Untuk Client bisa di jalankan di terminal VScode atau os yg lain
 
 Jalankan client.js dari komputer lain di jaringan yang sama
 
