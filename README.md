@@ -194,10 +194,14 @@ Jalankan client.js dari komputer lain di jaringan yang sama
 
 ### Hasil
 
+![image](ss/cuplikan_websocket.png)
 
+#### References
 
-
-
+- [DigitalOcean. (2024, Oktober 30).](https://www.digitalocean.com/community/tutorials/how-to-install-node-js-on-ubuntu-22-04)
+- [DataFlair. (2018, September 20).](https://data-flair.training/blogs/install-ubuntu-on-virtualbox/)
+- [Node.js. (2025, Maret 9).](https://nodejs.org/en/learn/getting-started/introduction-to-nodejs)
+- [Hostinger. (n.d.)](https://www.hostinger.com/id/tutorial/install-node-js-ubuntu)
 
 
 
