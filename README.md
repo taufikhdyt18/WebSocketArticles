@@ -1,53 +1,206 @@
-# WebSocketArticles
+# WebSocketExperimen
 | UTS |  Pemrograman Web 2  
 |-------|---------
 | NIM   | 312310576
 | Nama  | Taufik Hidayat
 | Kelas | TI.23.A6
 | Dosen |  Agung Nugroho, S.Kom., M.Kom.
-| Link Artikel | https://medium.com/@tfkhdyt18/websocket-effective-communication-in-real-time-for-contemporary-applications-83a494e5d4cd |
-
-### Pendahuluan
-Kebutuhan akan aplikasi yang dapat berkomunikasi secara instan dan interaktif meningkat sebagai akibat dari kemajuan teknologi web. Untuk aplikasi real-time seperti chat, game online, dan notifikasi, model komunikasi tradisional berbasis HTTP yang menggunakan pendekatan request-response mulai terasa kurang efisien. Ini adalah tempat teknologi WebSocket muncul sebagai protokol komunikasi yang memungkinkan pertukaran data dua arah yang berkelanjutan dan langsung. Konsep WebSocket, perbedaan dengan HTTP konvensional, dan contoh implementasi sederhana dibahas dalam artikel ini.
-
-### PEMBAHASAN
-Apa itu WebSocket?
-WebSocket adalah protokol komunikasi yang menggunakan koneksi TCP full-duplex antara klien dan server. Ini memungkinkan data dikirim dan diterima secara bersamaan dan berkelanjutan tanpa harus membuka koneksi baru setiap kali bertukar data. Ini berbeda dengan HTTP konvensional, yang memungkinkan interaksi data dalam waktu nyata dengan latensi rendah.
-
-Bagaimana WebSocket berbeda dengan HTTP tradisional? HTTP tradisional menggunakan model request-response di mana klien mengirim permintaan dan server memberikan respons, kemudian koneksi ditutup. Ini menyebabkan overhead dan latensi yang lebih tinggi karena koneksi harus dibuka dan ditutup berulang kali. Sebaliknya, WebSocket memiliki koneksi yang tetap dibuka, yang memungkinkan pertukaran data yang efisien dan cepat tanpa overhead berulang. Ini membuatnya ideal untuk aplikasi yang memerlukan komunikasi interaktif antara klien dan server.
-Kasus: Jika Anda menggunakan aplikasi chat online WebSocket, Anda dapat mengirim dan menerima pesan secara instan tanpa perlu refresh halaman.
-Game Online: Memungkinkan Anda berinteraksi dengan pemain lain dan mengikuti perubahan status game secara real-time.
-Notifikasi Real-Time: Memberikan pemberitahuan kepada pengguna secara real-time.
-Live Data Feed: Misalnya, data pasar saham atau sensor Internet of Things yang perlu diupdate secara terus menerus
-Kolaborasi Dokumen Online: Memungkinkan pengguna menyinkronkan perubahan dokumen secara bersamaan.
 
 
-### Implementasi sederhana
-Aplikasi chat real-time menggunakan Node.js dengan VirtualBox ubuntu VM sebagai server dan html+JavaScript pada klien. Saat klien terhubung, koneksi WebSocket terbuka. Ini memungkinkan komunikasi real-time yang lancar karena pesan dapat dikirim dan diterima secara instan tanpa melakukan permintaan HTTP berulang.
-Kesimpulan
-WebSocket menjadi teknologi penting untuk mendukung aplikasi web modern yang membutuhkan komunikasi real-time dengan latensi rendah dan efisiensi tinggi. Dengan perbedaan dasar dari HTTP tradisional, WebSocket memungkinkan pengalaman pengguna yang lebih interaktif dan responsif, terutama untuk aplikasi chat, game, notifikasi, dan feed data live. Selain itu, kemudahan implementasinya memberi pengembang banyak peluang untuk membuat produk digital yang lebih dinamis.
 
-- Server.js
-![image](ss/server.png)
+### Eksperimen Node.js dengan Virtual Machine Ubuntu
 
-- Client.html
-![image](ss/client.png)
+Struktur eksperimen menggunakan Node.js dengan server.js dan client.js yang dijalankan pada Ubuntu Virtual Machine.
 
-- Cuplikan
-![image](ss/cuplikan_websocket.png)
+### Persiapan
+#### Download dan Install VirtualBox
+
+1. Download VirtualBox dari situs resmi: https://www.virtualbox.org/wiki/Downloads
+2. Install VirtualBox sesuai dengan sistem operasi yang Anda gunakan
+
+#### Download Ubuntu
+Download Ubuntu Desktop dari situs resmi: https://ubuntu.com/download/desktop
+
+### Instalasi Node.js di Ubuntu
+```
+sudo apt update
+sudo apt install nodejs
+sudo apt install npm
+```
+
+### Struktur Eksperimen
+#### 1. Buat file server.js
+```
+const WebSocket = require('ws');
+const readline = require('readline');
+
+const server = new WebSocket.Server({ host: '192.168.1.26', port: 8080 });
+const clients = new Set();
+
+console.log('Menunggu koneksi dari klien...');
+
+server.on('connection', socket => {
+  clients.add(socket);
+  console.log('Client connected');
+
+  socket.on('message', message => {
+    try {
+    
+      const data = JSON.parse(message);
+      console.log('============');
+      console.log(`| ${data.username}: ${data.message}`);
+      console.log('============');
+
+     
+      broadcast(JSON.stringify({
+        username: data.username,
+        message: data.message
+      }));
+    } catch (err) {
+      console.log('Pesan tidak valid dari client');
+    }
+  });
+
+  socket.on('close', () => {
+    clients.delete(socket);
+    console.log('Client disconnected');
+  });
+});
+
+function broadcast(message) {
+  for (const client of clients) {
+    if (client.readyState === WebSocket.OPEN) {
+      client.send(message);
+    }
+  }
+}
 
 
-### Kesimpulan
-WebSocket menjadi teknologi penting untuk mendukung aplikasi web modern yang membutuhkan komunikasi real-time dengan latensi rendah dan efisiensi tinggi. Dengan perbedaan dasar dari HTTP tradisional, WebSocket memungkinkan pengalaman pengguna yang lebih interaktif dan responsif, terutama untuk aplikasi chat, game, notifikasi, dan feed data live. Selain itu, kemudahan implementasinya memberi pengembang banyak peluang untuk membuat produk digital yang lebih dinamis.
+const rl = readline.createInterface({
+  input: process.stdin,
+  output: process.stdout
+});
+
+function promptServerMessage() {
+  rl.question('Pesan dari Server: ', (msg) => {
+    const data = JSON.stringify({
+      username: 'Server',
+      message: msg
+    });
+
+    broadcast(data);
+
+    console.log('============');
+    console.log(`| Server: ${msg}`);
+    console.log('============');
+
+    promptServerMessage();
+  });
+}
+
+promptServerMessage();
+```
+#### 2. Buat file client.js
+```
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <title>WebSocket Chat Grup</title>
+</head>
+<body>
+  <h1>WebSocket</h1>
+  <input id="username" type="text" placeholder="Masukkan username..." />
+  <br />
+  <input id="input" type="text" placeholder="Ketik pesan…" disabled />
+  <button onclick="sendMessage()" disabled id="sendBtn">Kirim</button>
+
+  <div id="chat-box">
+    <ul id="messages"></ul>
+  </div>
+
+  <script>
+    let username = '';
+    const socket = new WebSocket("ws://192.168.1.26:3306");
+    const input = document.getElementById('input');
+    const usernameInput = document.getElementById('username');
+    const sendBtn = document.getElementById('sendBtn');
+    const messages = document.getElementById('messages');
+
+    socket.onopen = () => {
+      addStatusMessage('Terhubung ke server! Silakan masukkan username.');
+    };
+
+    socket.onmessage = event => {
+      const data = JSON.parse(event.data);
+      const li = document.createElement('li');
+
+      if (data.username === username) {
+        li.className = 'client-msg';
+      } else {
+        li.className = 'other-msg';
+      }
+
+      li.innerHTML = `<span class="username">${data.username}</span>${data.message}`;
+      messages.appendChild(li);
+    };
+
+    usernameInput.addEventListener('change', () => {
+      const name = usernameInput.value.trim();
+      if (name !== '') {
+        username = name;
+        input.disabled = false;
+        sendBtn.disabled = false;
+        usernameInput.disabled = true;
+        addStatusMessage(`Kamu login sebagai ${username}`);
+      }
+    });
+
+    function sendMessage() {
+      const text = input.value.trim();
+      if (text !== '' && username !== '') {
+        const data = {
+          username: username,
+          message: text
+        };
+        socket.send(JSON.stringify(data));
+        input.value = '';
+      }
+    }
+
+    function addStatusMessage(text) {
+      const li = document.createElement('li');
+      li.textContent = text;
+      li.className = 'status-msg';
+      messages.appendChild(li);
+    }
+  </script>
+</body>
+</html>
+```
+
+### Pengujian
+
+Jalankan server.js di VM Ubuntu
+
+#### Di VirtualBox ubuntu
+```
+node server.js
+```
+
+#### Bisa di jalankan di terminal VScode atau os yg lain
+
+Jalankan client.js dari komputer lain di jaringan yang sama
+
+### Hasil
 
 
-### References
-- Fette dan Melnikov (2011). Protokol WebSocket. RFC 6455 dapat ditemukan di sini: https://tools.ietf.org/html/rfc6455
 
-- WebSockets dapat ditemukan di MDN Web Docs di https://developer.mozilla.org/en-US/docs/Web/API/WebSockets_API.
 
-- Node.js ws Library dapat ditemukan di Perpustakaan GitHub berikut: https://github.com/websockets/ws
 
-- Standar HTML Living: WebSocket WHATWG dapat ditemukan di sini: https://html.spec.whatwg.org/multipage/web-sockets.html.
 
-- Tutorial WebSocket dari TutorialsPoint dapat ditemukan di sini: https://www.tutorialspoint.com/websockets/index.htm.
+
+
+
+
+
